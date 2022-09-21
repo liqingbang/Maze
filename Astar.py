@@ -88,42 +88,43 @@ def findMazeEndPoint(frame):
     return Node(mid, frame.shape[0] - 1)
 
 
-dir = 8
-total_time = 0
-for i in range(101):
-    # str = f'{dir}/{dir} by {dir} orthogonal maze ({i}).png'
-    str = "16x16_0_w2_T2.png"
-    frame_maze = cv.imread(str)
-    frame_maze_clone = frame_maze.copy()
-    frame_maze_clone2 = frame_maze.copy()
-    frame_maze = cv.cvtColor(frame_maze, cv.COLOR_BGR2GRAY)
-    height, width = frame_maze.shape
+# dir = 8
+for dir in [16, 32, 64, 96, 128]:
+    total_time = 0
+    for i in range(101):
+        str = f'{dir}/{dir} by {dir} orthogonal maze ({i}).png'
+        frame_maze = cv.imread(str)
+        frame_maze_clone = frame_maze.copy()
+        frame_maze_clone2 = frame_maze.copy()
+        frame_maze = cv.cvtColor(frame_maze, cv.COLOR_BGR2GRAY)
+        height, width = frame_maze.shape
 
-    org = findMazeStartPoint(frame_maze)
-    des = findMazeEndPoint(frame_maze)
+        org = findMazeStartPoint(frame_maze)
+        des = findMazeEndPoint(frame_maze)
 
-    dirs = [[-1, 0], [0, 1], [0, -1], [1, 0]]
-    mem = {(org.x, org.y): 1}
-    # 设置起始点和终点
-    t1 = cv.getTickCount()
-    result_node = A_star(org, des)
-    total_time += (cv.getTickCount() - t1) / cv.getTickFrequency()
-    print((cv.getTickCount() - t1) / cv.getTickFrequency())
-    path = []
-    while result_node is not None:
-        path.append(result_node)
-        result_node = result_node.parent
-    path = reversed(path)
-    contours = []
-    for p in path:
-        contours.append([[p.x, p.y]])
-    contours = np.array(contours)
-    cv.drawContours(frame_maze_clone2, contours, -1, (255, 150, 255), 2)
-    # cv.polylines(frame_maze_clone2,[contours],False,(255,30,180),2)
-    cv.imshow("frame", frame_maze_clone2)
-    cv.imwrite("result.png",frame_maze_clone2)
-    cv.waitKey(0)
-print(f"average_time:{total_time / 101}")
+        dirs = [[-1, 0], [0, 1], [0, -1], [1, 0]]
+        mem = {(org.x, org.y): 1}
+        # 设置起始点和终点
+        t1 = cv.getTickCount()
+        result_node = A_star(org, des)
+        total_time += (cv.getTickCount() - t1) / cv.getTickFrequency()
+        print((cv.getTickCount() - t1) / cv.getTickFrequency())
+        path = []
+        while result_node is not None:
+            path.append(result_node)
+            result_node = result_node.parent
+        path = reversed(path)
+        contours = []
+        for p in path:
+            contours.append([[p.x, p.y]])
+        contours = np.array(contours)
+        cv.drawContours(frame_maze_clone2, contours, -1, (255, 150, 255), 2)
+        # cv.polylines(frame_maze_clone2,[contours],False,(255,30,180),2)
+        # cv.imshow("frame", frame_maze_clone2)
+        path = f'result/Astar/{dir}/{dir} by {dir} orthogonal maze ({i}).png'
+        cv.imwrite(path, frame_maze_clone2)
+        cv.waitKey(0)
+    print(f"average_time:{total_time / 101}")
 
 
 def draw_circle(event, x, y, flags, param):

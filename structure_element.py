@@ -97,7 +97,8 @@ for dir in [8, 16, 32, 64, 96, 128]:
         frame_time = (cv.getTickCount() - t1) / cv.getTickFrequency()
         total_time += frame_time
         print(frame_time)
-        cv.imshow("maze", roi_maze)
+        path = f'result/ImageProcess/{dir}/{dir} by {dir} orthogonal maze ({i}).png'
+        cv.imwrite(path, roi_maze)
         cv.waitKey(20)
     time[dir] = total_time / 101
     # print(f"average_time:{total_time / 101}")
