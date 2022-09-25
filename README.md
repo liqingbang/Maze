@@ -8,4 +8,7 @@
 
 `iteration`和`structure_element`为图像处理求解程序
 ## code 3.2
+w代表墙壁宽度像素
+T代表迷宫栅格像素密度
 ## code 3.3
+w代表墙壁宽度像素
